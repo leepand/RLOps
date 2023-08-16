@@ -68,7 +68,7 @@ if authentication_status:
 
         show_pages(
             [
-                Page("pages/test.py", "Home", "🏠"),
+                Page("server/pages/test.py", "Home", "🏠"),
             ]
         )
 
