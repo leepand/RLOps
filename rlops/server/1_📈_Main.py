@@ -59,11 +59,11 @@ if authentication_status:
     # # ---- SIDEBAR ----
     st.sidebar.title(f"Welcome {name}")
     # st.sidebar.header("select page here :")
-    st.write("# Welcome to bole rlops!..")
+    st.write("# Welcome to bole rlops!")
 
     ###about ....
-    st.subheader("Introduction :")
-    st.text("1. \n2. \n3. \n4. \n5. \n")
+    st.subheader("Subjects :")
+    st.text("1.Experiments: 当前实验分组的实时付费 \n2.Services: 模型服务管理 \n3.Monitor: 模型监控 \n")
 
     st.sidebar.success("Select a page above.")
 
