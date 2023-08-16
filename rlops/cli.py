@@ -2,7 +2,7 @@ import click
 import os
 from multiprocessing import Process
 import subprocess
-
+from .utils.killport import kill9_byport
 
 _CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
@@ -24,8 +24,8 @@ def cli():
     "-p",
     "--port",
     type=int,
-    default=8501,
-    help="server port. Default: 8501",
+    default=8910,
+    help="server port. Default: 8910",
 )
 @click.option(
     "--reload",
@@ -64,6 +64,26 @@ def start_server(path, port):
     except subprocess.TimeoutExpired:
         return "Command execution timed out"
 
+@click.command("killport", no_args_is_help=True)
+@click.option("--port", help="model port", required=True)
+@click.option(
+    "--confirm", help="confirm", is_flag=True, default=True, show_default=True
+)
+def killport(port, confirm):
+    """
+    Kill port process.
+    """
+    try:
+        if confirm:
+            c = input("Confirm port {} to {} (y/n)".format(port, "kill"))
+            if c == "n":
+                return None
+        else:
+            c = "y"
+        if c == "y":
+            kill9_byport(port)
+    except Exception as e:
+        click.echo(e)
 
 if __name__ == "__main__":
     cli()
