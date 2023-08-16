@@ -9,7 +9,7 @@ st.set_page_config(page_title="RL Experiments Dashboard", page_icon="📈")
 
 
 # st.header("YOLO")
-"# 📈 Real-Time / RL 模型实验Dashboard"
+"# 📈 Real-Time / RL 模型实验"
 
 
 def number_format(number):
