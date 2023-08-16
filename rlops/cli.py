@@ -36,19 +36,32 @@ def serve(host, port, reload):
     """开启HTTP服务。"""
 
     path = os.path.realpath(os.path.dirname(__file__))
-    api = Process(
-        target=start_server,
-        kwargs={"path": path, "port": port, "reload": reload},
-    )
-    api.start()
-    api.join()
+    api = start_server(path=path, port=port)
 
 
-def start_server(path, port, reload):
-    cmd = ["streamlit run", "server/main.py", "--server.port", str(port)]
-    if reload:
-        cmd.append("--reload")
-    subprocess.call(cmd, cwd=path)
+def start_server(path, port):
+    try:
+        # 执行shell命令并捕获日志
+        process = subprocess.run(
+            f"cd {path} && streamlit run server/main.py --server.port {port}",
+            shell=True,
+            capture_output=True,
+            preexec_fn=os.setsid,
+            text=True,
+            timeout=1,  # 设定超时时间
+            check=True,  # 检查命令执行结果，若返回非零状态码则抛出异常
+        )
+
+        if process.stdout or process.stderr:
+            msg = process.stderr.strip()
+        else:
+            msg = "your script is processed success"
+
+        return msg
+    except subprocess.CalledProcessError as e:
+        return f"Error: {e}"
+    except subprocess.TimeoutExpired:
+        return "Command execution timed out"
 
 
 if __name__ == "__main__":
