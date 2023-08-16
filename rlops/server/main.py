@@ -61,20 +61,6 @@ if authentication_status:
     # st.sidebar.header("select page here :")
     st.write("# Welcome to bole rlops!..")
 
-    with st.echo("below"):
-        from st_pages import Page, Section, add_page_title, show_pages
-
-        "## Declaring the pages in your app:"
-
-        show_pages(
-            [
-                Page("server/pages/test.py", "Home", "🏠"),
-            ]
-        )
-
-        add_page_title()  # Optional method to add title and icon to current page
-        # Also calls add_indentation() by default, which indents pages within a section
-
     ###about ....
     st.subheader("Introduction :")
     st.text("1. \n2. \n3. \n4. \n5. \n")
