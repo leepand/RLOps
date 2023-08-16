@@ -44,7 +44,7 @@ def start_server(path, port):
     try:
         # 执行shell命令并捕获日志
         process = subprocess.run(
-            f"cd {path} && streamlit run server/main.py --server.port {port}",
+            f"cd {path} && streamlit run server/1_📈_Main.py --server.port {port}",
             shell=True,
             capture_output=True,
             preexec_fn=os.setsid,
