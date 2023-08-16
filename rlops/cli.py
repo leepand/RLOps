@@ -49,7 +49,7 @@ def start_server(path, port):
             capture_output=True,
             preexec_fn=os.setsid,
             text=True,
-            timeout=10,  # 设定超时时间
+            timeout=3000,  # 设定超时时间
             check=True,  # 检查命令执行结果，若返回非零状态码则抛出异常
         )
 
