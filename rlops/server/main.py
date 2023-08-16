@@ -16,7 +16,7 @@ with file_path.open("wb") as file:
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(
-    page_title="streamlit Dashboard", page_icon=":bar_chart:", layout="wide"
+    page_title="RL Model Dashboard", page_icon=":bar_chart:", layout="wide"
 )
 
 hide_bar = """
@@ -59,7 +59,21 @@ if authentication_status:
     # # ---- SIDEBAR ----
     st.sidebar.title(f"Welcome {name}")
     # st.sidebar.header("select page here :")
-    st.write("# Welcome to Streamlit!..")
+    st.write("# Welcome to bole rlops!..")
+
+    with st.echo("below"):
+        from st_pages import Page, Section, add_page_title, show_pages
+
+        "## Declaring the pages in your app:"
+
+        show_pages(
+            [
+                Page("pages/test.py", "Home", "🏠"),
+            ]
+        )
+
+        add_page_title()  # Optional method to add title and icon to current page
+        # Also calls add_indentation() by default, which indents pages within a section
 
     ###about ....
     st.subheader("Introduction :")

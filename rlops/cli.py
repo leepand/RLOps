@@ -64,6 +64,7 @@ def start_server(path, port):
     except subprocess.TimeoutExpired:
         return "Command execution timed out"
 
+
 @cli.command("killport", no_args_is_help=True)
 @click.option("--port", help="model port", required=True)
 @click.option(
@@ -84,6 +85,7 @@ def killport(port, confirm):
             kill9_byport(port)
     except Exception as e:
         click.echo(e)
+
 
 if __name__ == "__main__":
     cli()
