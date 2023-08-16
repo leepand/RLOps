@@ -36,7 +36,8 @@ def serve(host, port, reload):
     """开启HTTP服务。"""
 
     path = os.path.realpath(os.path.dirname(__file__))
-    api = start_server(path=path, port=port)
+    msg = start_server(path=path, port=port)
+    print(msg)
 
 
 def start_server(path, port):
