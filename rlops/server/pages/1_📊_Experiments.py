@@ -201,36 +201,34 @@ ON
 
     # st.markdown(f"## KPI {kpi}")
 
-    with placeholder.container():
-        # create three columns
-        kpi1, kpi2, kpi3 = st.columns(3)
-        # fill in those three columns with respective metrics or KPIs
-        avg_age = 89
-        count_married = 704
-        balance = 1196
-        x = conn.execute("select sum(pays) as all_pays from df").df()
-        _total_pays_y = x_y.to_dict(orient="records")[0]["all_pays"]
-        _total_pays = x.to_dict(orient="records")[0]["all_pays"]
-        total_pays = number_format(round(_total_pays, 2))
-        total_pays_y = number_format(round(_total_pays_y, 2))
+    # with placeholder.container():
+    # create three columns
+    kpi1, kpi2, kpi3 = st.columns(3)
+    # fill in those three columns with respective metrics or KPIs
 
-        model_val, control_val = cal_model_control_pays()
-        kpi1.metric(
-            label="当前总付费/昨日总付费 $",
-            value=f"$ {total_pays}",
-            delta=total_pays_y
-            # delta=number_format(round(_total_pays - _total_pays_y, 2)),
-        )
-        kpi2.metric(
-            label="model/control 分组总付费 $",
-            value=f"$ {number_format(round(model_val, 2))}",
-            delta=number_format(round(control_val, 2)),
-        )
-        kpi3.metric(
-            label="model/control Lift ＄",
-            value=f"$ {round(model_val-control_val,2)} ",
-            delta=f"{round(model_val / control_val - 1, 4) * 100}%",
-        )
+    x = conn.execute("select sum(pays) as all_pays from df").df()
+    _total_pays_y = x_y.to_dict(orient="records")[0]["all_pays"]
+    _total_pays = x.to_dict(orient="records")[0]["all_pays"]
+    total_pays = number_format(round(_total_pays, 2))
+    total_pays_y = number_format(round(_total_pays_y, 2))
+
+    model_val, control_val = cal_model_control_pays()
+    kpi1.metric(
+        label="当前总付费/昨日总付费 $",
+        value=f"$ {total_pays}",
+        delta=total_pays_y
+        # delta=number_format(round(_total_pays - _total_pays_y, 2)),
+    )
+    kpi2.metric(
+        label="model/control 分组总付费 $",
+        value=f"$ {number_format(round(model_val, 2))}",
+        delta=number_format(round(control_val, 2)),
+    )
+    kpi3.metric(
+        label="model/control Lift ＄",
+        value=f"$ {round(model_val-control_val,2)} ",
+        delta=f"{round(model_val / control_val - 1, 4) * 100}%",
+    )
 
     st.markdown("""---""")
     select_time = get_bj_day_time()
