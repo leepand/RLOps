@@ -35,15 +35,25 @@ temp = st.selectbox(
     key=models_abs_dir,
 )
 
-models_abs_dir = os.path.join(models_abs_dir, temp)
-
-try:
-    show_dir_tree(_models_abs_dir, temp)
-except FileNotFoundError:
-    pass
-
 table = st.empty()
+models_abs_dir = os.path.join(models_abs_dir, temp)
 
 files_in_dir = os.listdir(models_abs_dir)
 
 table.write(models_table(files_in_dir, models_dir=models_abs_dir))
+
+
+model_version_level = 2
+models_versions_to_show = get_dirs_inside_dir(models_abs_dir)
+temp2 = st.selectbox(
+    "Models version' folder" + f": level {model_version_level}",
+    options=models_versions_to_show,
+    key=models_abs_dir,
+)
+
+models_abs_dir_version = os.path.join(models_abs_dir, temp2)
+
+try:
+    show_dir_tree(models_abs_dir, temp2)
+except FileNotFoundError:
+    pass
