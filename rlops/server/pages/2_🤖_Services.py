@@ -21,6 +21,7 @@ else:
     file_path = "prod"
 
 models_abs_dir = os.path.join(base_path, "files", file_path)
+_models_abs_dir = os.path.join(base_path, "files", file_path)
 files_in_dir = os.listdir(models_abs_dir)
 table.write(models_table(files_in_dir=files_in_dir, models_dir=models_abs_dir))
 
@@ -37,7 +38,7 @@ temp = st.selectbox(
 models_abs_dir = os.path.join(models_abs_dir, temp)
 
 try:
-    show_dir_tree(models_abs_dir)
+    show_dir_tree(_models_abs_dir, temp)
 except FileNotFoundError:
     pass
 
