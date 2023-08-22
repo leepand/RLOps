@@ -1,5 +1,5 @@
 import streamlit as st
-from rlops.utils.file_utils import models_table, get_dirs_inside_dir
+from rlops.utils.file_utils import models_table, get_dirs_inside_dir, show_dir_tree
 import os
 
 
@@ -33,3 +33,16 @@ temp = st.selectbox(
     options=models_to_show,
     key=models_abs_dir,
 )
+
+models_abs_dir = os.path.join(models_abs_dir, temp)
+
+try:
+    show_dir_tree(models_abs_dir)
+except FileNotFoundError:
+    pass
+
+table = st.empty()
+
+files_in_dir = os.listdir(models_abs_dir)
+
+table.write(models_table(files_in_dir, models_dir=models_abs_dir))
