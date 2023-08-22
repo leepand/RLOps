@@ -105,6 +105,22 @@ def addmodel(model_name):
     data_store.sadd(experiment_names_key, str(model_name))
     print(f"add new experiment/models:{model_name}")
 
+@cli.command("delmodel", no_args_is_help=True)
+@click.option(
+    "--model_name",
+    type=str,
+    help="model name / experiment name",
+)
+def delmodel(model_name):
+    """添加实验"""
+    base_path = data_dir()
+    center_db_path = os.path.join(base_path, "center.db")
+    make_containing_dirs(base_path)
+    data_store = hirlite.Rlite(center_db_path, encoding="utf8")
+    experiment_names_key = f"experiments"
+    data_store.SREM(experiment_names_key, str(model_name))
+    print(f"del experiment/models:{model_name}")
+
 
 if __name__ == "__main__":
     cli()
