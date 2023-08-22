@@ -105,6 +105,7 @@ def addmodel(model_name):
     data_store.sadd(experiment_names_key, str(model_name))
     print(f"add new experiment/models:{model_name}")
 
+
 @cli.command("delmodel", no_args_is_help=True)
 @click.option(
     "--model_name",
