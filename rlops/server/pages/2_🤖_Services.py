@@ -22,4 +22,4 @@ else:
 
 models_abs_dir = os.path.join(base_path, "files", file_path)
 files_in_dir = os.listdir(models_abs_dir)
-table.write(models_table(files_in_dir))
+table.write(models_table(files_in_dir=files_in_dir, models_dir=models_abs_dir))
