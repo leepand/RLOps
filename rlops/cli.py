@@ -3,6 +3,8 @@ import os
 from multiprocessing import Process
 import subprocess
 from .utils.killport import kill9_byport
+from .utils.file_utils import make_containing_dirs, data_dir
+import hirlite
 
 _CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
@@ -12,7 +14,7 @@ def cli():
     pass
 
 
-@cli.command("serve")
+@cli.command("serve", no_args_is_help=True)
 @click.option(
     "-H",
     "--host",
@@ -85,6 +87,23 @@ def killport(port, confirm):
             kill9_byport(port)
     except Exception as e:
         click.echo(e)
+
+
+@cli.command("addmodel", no_args_is_help=True)
+@click.option(
+    "--model_name",
+    type=str,
+    help="model name / experiment name",
+)
+def addmodel(model_name):
+    """添加实验"""
+    base_path = data_dir()
+    center_db_path = os.path.join(base_path, "center.db")
+    make_containing_dirs(base_path)
+    data_store = hirlite.Rlite(center_db_path, encoding="utf8")
+    experiment_names_key = f"experiments"
+    data_store.sadd(experiment_names_key, str(model_name))
+    print(f"add new experiment/models:{model_name}")
 
 
 if __name__ == "__main__":

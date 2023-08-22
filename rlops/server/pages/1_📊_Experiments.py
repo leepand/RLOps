@@ -1,12 +1,20 @@
 import os
 import streamlit as st
 import duckdb
+import hirlite
+
 from rlops.utils.bjtimes import get_bj_day_time, get_bj_day, get_yestoday_bj
+from rlops.utils.file_utils import make_containing_dirs, data_dir
 
 from google.cloud import bigquery
 
 st.set_page_config(page_title="RL Experiments Dashboard", page_icon="📈")
 
+base_path = data_dir()
+center_db_path = os.path.join(base_path, "center.db")
+make_containing_dirs(base_path)
+data_store = hirlite.Rlite(center_db_path, encoding="utf8")
+experiment_names_key = f"experiments"
 
 # st.header("YOLO")
 "# 📈 Real-Time / RL 模型实验"
@@ -102,7 +110,7 @@ def get_query_str(stat_date="2023-01-03", exp_name="spinux_strategy_recom"):
     return q_str
 
 
-exp_list = [
+_exp_list = [
     "uni_pricing_s0102",
     "spinux_strategy_recom",
     "mission_content_recom",
@@ -112,6 +120,13 @@ exp_list = [
     "online_recom_payitems",
     "online_navig_promotion_pricing",
 ]
+
+_exp_list_db = data_store.SMEMBERS(experiment_names_key)
+if len(list(_exp_list_db)) > 0:
+    exp_list = list(_exp_list_db)
+else:
+    exp_list = _exp_list
+
 df1_script = """
 SELECT
   alternatives,
