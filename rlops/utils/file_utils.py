@@ -94,6 +94,12 @@ def tree(dir_path: Path, prefix: str = ""):
     with each line prefixed by the same characters
     """
     contents = list(dir_path.iterdir())
+    contents = [
+        path
+        for path in contents
+        if path.name not in [".git", ".ipynb_checkpoints", "__pycache__", ".gitkeep"]
+    ]  # Filter the directory list
+
     # contents each get pointers that are ├── with a final └── :
     pointers = [tee] * (len(contents) - 1) + [last]
     for pointer, path in zip(pointers, contents):
