@@ -2,6 +2,10 @@ import os
 import platform
 import datetime
 import pandas as pd
+from pathlib import Path
+import streamlit as st
+import shutil
+import sys
 
 
 def data_dir_default():
@@ -74,3 +78,83 @@ def models_table(files_in_dir=None, models_dir=None, use_models_dir=True):
         index=["Model", "Last modified", "Size in MB"],
     ).T
     return files_with_time
+
+
+# Helper functions
+
+tee = "├── "
+last = "└── "
+branch = "│   "
+space = "    "
+
+
+def tree(dir_path: Path, prefix: str = ""):
+    """A recursive generator, given a directory Path object
+    will yield a visual tree structure line by line
+    with each line prefixed by the same characters
+    """
+    contents = list(dir_path.iterdir())
+    # contents each get pointers that are ├── with a final └── :
+    pointers = [tee] * (len(contents) - 1) + [last]
+    for pointer, path in zip(pointers, contents):
+        yield prefix + pointer + path.name
+        if path.is_dir():  # extend the prefix and recurse:
+            extension = branch if pointer == tee else space
+            # i.e. space because last, └── , above so no more |
+            yield from tree(path, prefix=prefix + extension)
+
+
+def get_dirs_inside_dir(folder):
+    return [
+        my_dir
+        for my_dir in list(
+            map(
+                lambda x: os.path.basename(x),
+                sorted(Path(folder).iterdir(), key=os.path.getmtime, reverse=True),
+            )
+        )
+        if os.path.isdir(os.path.join(folder, my_dir))
+        and my_dir != "__pycache__"
+        and my_dir != ".ipynb_checkpoints"
+        and my_dir != "API"
+    ]
+
+
+def list_folders_in_folder(folder):
+    return [
+        file for file in os.listdir(folder) if os.path.isdir(os.path.join(folder, file))
+    ]
+
+
+def show_dir_tree(base_path_str, folder):
+    with st.expander(f"Show {os.path.basename(folder)} folder tree"):
+        for line in tree(Path(base_path_str) / folder):
+            st.write(line)
+
+
+def delete_folder(folder, ask=True):
+    if not ask:
+        shutil.rmtree(folder)
+    else:
+        folder_basename = os.path.basename(folder)
+        if len(os.listdir(folder)) > 0:
+            st.warning(
+                f"**{folder_basename} is not empty. Are you sure you want to delete it?**"
+            )
+            show_dir_tree(folder)
+            if st.button("Yes"):
+                try:
+                    shutil.rmtree(folder)
+                except:
+                    st.error(f"Couldn't delete {folder_basename}:")
+                    e = sys.exc_info()
+                    st.error(e)
+        else:
+            st.write(f"**Are you sure you want to delete {folder_basename}?**")
+            if st.button("Yes"):
+                try:
+                    shutil.rmtree(folder)
+                except:
+                    st.error(f"Couldn't delete {folder_basename}:")
+                    e = sys.exc_info()
+                    st.error(e)

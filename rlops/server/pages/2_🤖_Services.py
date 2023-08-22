@@ -1,5 +1,5 @@
 import streamlit as st
-from rlops.utils.file_utils import models_table
+from rlops.utils.file_utils import models_table, get_dirs_inside_dir
 import os
 
 
@@ -23,3 +23,13 @@ else:
 models_abs_dir = os.path.join(base_path, "files", file_path)
 files_in_dir = os.listdir(models_abs_dir)
 table.write(models_table(files_in_dir=files_in_dir, models_dir=models_abs_dir))
+
+
+# files_to_show = get_dirs_inside_dir(models_abs_dir)
+models_to_show = get_dirs_inside_dir(models_abs_dir)
+model_level = 1
+temp = st.selectbox(
+    "Models' folder" + f": level {model_level}",
+    options=models_to_show,
+    key=models_abs_dir,
+)
