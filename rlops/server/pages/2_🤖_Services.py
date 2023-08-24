@@ -21,9 +21,18 @@ elif selected_genre == "预生产":
 else:
     file_path = "prod"
 
+table2 = st.empty()
+
+st.subheader("Log Files")
+logs_abs_dir = log_path
+files_in_dir_log = os.listdir(logs_abs_dir)
+table2.write(models_table(files_in_dir_log, models_dir=logs_abs_dir))
+
+
 models_abs_dir = os.path.join(base_path, "files", file_path)
 _models_abs_dir = os.path.join(base_path, "files", file_path)
 files_in_dir = os.listdir(models_abs_dir)
+st.subheader("Model Files")
 table.write(models_table(files_in_dir=files_in_dir, models_dir=models_abs_dir))
 
 
@@ -35,19 +44,11 @@ temp = st.selectbox(
     options=models_to_show,
     key=models_abs_dir,
 )
-table2 = st.empty()
-
-st.subheader("Log Files")
-logs_abs_dir = log_path
-files_in_dir_log = os.listdir(logs_abs_dir)
-table.write(models_table(files_in_dir_log, models_dir=logs_abs_dir))
 
 table = st.empty()
 models_abs_dir = os.path.join(models_abs_dir, temp)
 
 files_in_dir = os.listdir(models_abs_dir)
-
-st.subheader("Model Files")
 table.write(models_table(files_in_dir, models_dir=models_abs_dir))
 
 
