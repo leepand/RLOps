@@ -23,7 +23,7 @@ else:
 
 table2 = st.empty()
 
-st.subheader("Log Files")
+st.text("Log Files")
 logs_abs_dir = log_path
 files_in_dir_log = os.listdir(logs_abs_dir)
 table2.write(models_table(files_in_dir_log, models_dir=logs_abs_dir))
@@ -32,7 +32,7 @@ table2.write(models_table(files_in_dir_log, models_dir=logs_abs_dir))
 models_abs_dir = os.path.join(base_path, "files", file_path)
 _models_abs_dir = os.path.join(base_path, "files", file_path)
 files_in_dir = os.listdir(models_abs_dir)
-st.subheader("Model Files")
+st.text("Model Files")
 table.write(models_table(files_in_dir=files_in_dir, models_dir=models_abs_dir))
 
 
