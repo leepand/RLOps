@@ -7,6 +7,7 @@ st.set_page_config(page_title="RL model services", page_icon="📈")
 
 "# 📈 RL Model Services"
 
+log_path = "/home/ec2-user/models_deploy/center_logs"
 base_path = os.path.join(os.path.expanduser("~"), "mlopskit")
 table = st.empty()
 st.sidebar.subheader("当前模型环境")
@@ -34,12 +35,19 @@ temp = st.selectbox(
     options=models_to_show,
     key=models_abs_dir,
 )
+table2 = st.empty()
+
+st.subheader("Log Files")
+logs_abs_dir = log_path
+files_in_dir_log = os.listdir(logs_abs_dir)
+table.write(models_table(files_in_dir_log, models_dir=logs_abs_dir))
 
 table = st.empty()
 models_abs_dir = os.path.join(models_abs_dir, temp)
 
 files_in_dir = os.listdir(models_abs_dir)
 
+st.subheader("Model Files")
 table.write(models_table(files_in_dir, models_dir=models_abs_dir))
 
 
