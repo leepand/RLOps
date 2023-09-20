@@ -83,6 +83,7 @@ def get_query_str(stat_date="2023-01-03", exp_name="spinux_strategy_recom"):
       WHERE
         DATE(timestamp, "-03") BETWEEN '{stat_date}'
         AND '{stat_date}'
+        AND (NOT IFNULL(jsonpayload.is_sandbox, 0)=1)
      --AND jsonpayload.sp_ty BETWEEN "S03" and "S08"
       GROUP BY
         1,
@@ -173,6 +174,39 @@ if choice in ["主页", "付费跟踪"]:
 
     today = get_bj_day()
     df = online_pay_query(stat_date=today, exp_name=selected_genre)
+
+    filter_list = [0, 500, 800, 1000, 1500, 2000, 3000]
+    filter_big_user = st.sidebar.selectbox("剔除大户", filter_list)
+    query_date = today
+    min_pays = float(filter_big_user)
+    query_str = f"""SELECT
+  SUM(CAST(jsonpayload.usd AS float64)) AS pay,
+  jsonPayload.uid AS uid,
+  DATE(timestamp,'-3') AS date
+FROM
+  `seateam.fact.purchase`
+WHERE
+  DATE(timestamp,'-3')='{query_date}'
+GROUP BY
+  date,
+  uid
+HAVING
+  pay>{min_pays}
+ORDER BY
+  date"""
+
+    if filter_big_user == 0:
+        df = df
+    else:
+        client = bigquery.Client()
+        results = client.query(query_str)
+        dff = results.to_dataframe()
+        if dff.empty:
+            df = df
+        else:
+            other_table = df
+            df = other_table[~other_table["uid"].isin(dff["uid"])]
+
     y_day = get_yestoday_bj()
     df_y = online_pay_query(stat_date=y_day, exp_name=selected_genre)
     df1 = conn.execute(df1_script).df()
